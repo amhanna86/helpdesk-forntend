@@ -11,6 +11,25 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.sass$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              indentedSyntax: true,
+              resources: './src/components/assets/css/sass/_dore.style.scss',
+              // sass-loader version >= 8
+              sassOptions: {
+                indentedSyntax: true
+              }
+            }
+          }
+        ]
+      }
+      ,
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
