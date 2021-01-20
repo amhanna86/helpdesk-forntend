@@ -5,26 +5,31 @@
         <div class="input">
           <label for="email">Mail</label>
           <input
-              type="email"
-              id="email"
-              v-model="email">
+            id="email"
+            v-model="email"
+            type="email"
+          >
         </div>
         <div class="input">
           <label for="password">Password</label>
           <input
-              type="password"
-              id="password"
-              v-model="password">
+            id="password"
+            v-model="password"
+            type="password"
+          >
         </div>
         <div class="input">
           <label for="confirm-password">Confirm Password</label>
           <input
-              type="password"
-              id="confirm-password"
-              v-model="confirmPassword">
+            id="confirm-password"
+            v-model="confirmPassword"
+            type="password"
+          >
         </div>
         <div class="submit">
-          <button type="submit">Submit</button>
+          <button type="submit">
+            Submit
+          </button>
         </div>
       </form>
     </div>
@@ -32,32 +37,31 @@
 </template>
 
 <script>
-import router from "../../router";
-
-export default {
-  data() {
-    return {
-      email: '',
-      password: '',
-      confirmPassword: '',
-    }
-  },
-  created() {
-    if(this.$store.getters.isAuthenticated){
-      router.replace('/dashboard')
-    }
-  },
-  methods: {
-    onSubmit() {
-      const formData = {
-        email: this.email,
-        password: this.password,
-        confirmPassword: this.confirmPassword,
+  import router from '../../router'
+  export default {
+    data () {
+      return {
+        email: '',
+        password: '',
+        confirmPassword: '',
       }
-      this.$store.dispatch('signup', formData)
-    }
+    },
+    created () {
+      if (this.$store.getters.isAuthenticated) {
+        router.replace('/dashboard')
+      }
+    },
+    methods: {
+      onSubmit () {
+        const formData = {
+          email: this.email,
+          password: this.password,
+          confirmPassword: this.confirmPassword,
+        }
+        this.$store.dispatch('signup', formData)
+      },
+    },
   }
-}
 </script>
 
 <style scoped>
@@ -68,21 +72,17 @@ export default {
   padding: 20px;
   box-shadow: 0 2px 3px #ccc;
 }
-
 .input {
   margin: 10px auto;
 }
-
 .input label {
   display: block;
   color: #4e4e4e;
   margin-bottom: 6px;
 }
-
 .input.inline label {
   display: inline;
 }
-
 .input input {
   font: inherit;
   width: 100%;
@@ -90,22 +90,18 @@ export default {
   box-sizing: border-box;
   border: 1px solid #ccc;
 }
-
 .input.inline input {
   width: auto;
 }
-
 .input input:focus {
   outline: none;
   border: 1px solid #521751;
   background-color: #eee;
 }
-
 .input select {
   border: 1px solid #ccc;
   font: inherit;
 }
-
 .hobbies button {
   border: 1px solid #521751;
   background: #521751;
@@ -114,16 +110,13 @@ export default {
   font: inherit;
   cursor: pointer;
 }
-
 .hobbies button:hover,
 .hobbies button:active {
   background-color: #8d4288;
 }
-
 .hobbies input {
   width: 90%;
 }
-
 .submit button {
   border: 1px solid #521751;
   color: #521751;
@@ -131,13 +124,11 @@ export default {
   font: inherit;
   cursor: pointer;
 }
-
 .submit button:hover,
 .submit button:active {
   background-color: #521751;
   color: white;
 }
-
 .submit button[disabled],
 .submit button[disabled]:hover,
 .submit button[disabled]:active {
