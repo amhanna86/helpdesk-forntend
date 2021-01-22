@@ -3,87 +3,116 @@ import router from '../../../router'
 import axios from 'axios'
 
 const state = {
-    token: null,
-    id: null,
-    roles: [],
+  token: null,
+  id: null,
+  roles: [],
+  type: null,
+  expirationDate: null,
 }
 
 const getters = {
-    isAuthenticated (state) {
-        return state.token !== null
-    },
+  isAuthenticated (state) {
+    return state.token !== null
+  },
+  isAdmin (state) {
+    return state.roles.includes('ROLE_ADMIN')
+  },
+  isCustomer (state) {
+    return state.type === 'customer'
+  },
+  isAgent (state) {
+    return state.type === 'agent'
+  },
 }
 
 const mutations = {
-    authUser (state, userData) {
-        state.token = userData.token
-        state.id = userData.id
-        state.roles = userData.roles
-    },
-    clearAuthData (state) {
-        state.token = null
-        state.id = null
-        state.roles = null
-    },
+  authUser (state, userData) {
+    state.token = userData.token
+    state.id = userData.id
+    state.roles = userData.roles
+    state.type = userData.type
+    state.expirationDate = userData.expirationDate
+  },
+  clearAuthData (state) {
+    state.token = null
+    state.id = null
+    state.roles = null
+    state.type = null
+    state.expirationDate = null
+  },
 }
 
 const actions = {
-    signup ({ commit, dispatch }, formData) {
-        axiosNoAuth.post('/register', formData)
-            .then(response => {
-                console.log(response)
-                router.replace('/signin')
-            })
-            .catch(error => console.log(error))
-    },
-    login ({ commit }, authData) {
-        axios.post('/login_check', {
-            username: authData.email,
-            password: authData.password,
-        })
-            .then(response => {
-                commit('authUser', {
-                    token: response.data.token,
-                    id: response.data.data.id,
-                    roles: response.data.data.roles,
-                })
-                localStorage.setItem('token', response.data.token)
-                localStorage.setItem('id', response.data.data.id)
-                localStorage.setItem('roles', response.data.data.userRoles)
-                router.push('/')
-            })
-            .catch(error => console.log(error))
-    },
-    logout ({ commit }) {
-        commit('clearAuthData')
-        router.replace('/signin')
-        localStorage.removeItem('token')
-        localStorage.removeItem('id')
-        localStorage.removeItem('roles')
-    },
-    tryAutoLogin ({ commit }) {
-        const token = localStorage.getItem('token')
-        const id = localStorage.getItem('id')
-        const roles = localStorage.getItem('roles')
-        if (!token) {
-            return
-        }
-        // const expirationDate = localStorage.getItem('expirationDate')
-        // const now = new Date();
-        // if (now >= expirationDate) {
-        //     return
-        // }
+  setLogoutTimer ({ commit, dispatch }, expirationTime) {
+    setTimeout(() => {
+      dispatch('logout')
+    }, expirationTime * 1000)
+  },
+  signup ({ commit, dispatch }, formData) {
+    axiosNoAuth.post('/register', formData)
+      .then(response => {
+        dispatch('setLogoutTimer', 3600)
+        router.replace('/login')
+      })
+      .catch(error => console.log(error))
+  },
+  login ({ commit, dispatch }, authData) {
+    axios.post('/login_check', {
+      username: authData.email,
+      password: authData.password,
+    })
+      .then(response => {
         commit('authUser', {
-            token: token,
-            id: id,
-            userRoles: roles,
+          id: response.data.user.id,
+          token: response.data.token,
+          roles: response.data.user.roles,
+          type: response.data.user.type,
         })
-    },
+        localStorage.setItem('id', response.data.user.id)
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('roles', JSON.stringify(response.data.user.roles))
+        localStorage.setItem('type', response.data.user.type)
+        localStorage.setItem('expirationDate', response.data.user.expirationDate)
+        dispatch('setLogoutTimer', 3600)
+        router.push('/')
+      })
+      .catch(error => console.log(error))
+  },
+  logout ({ commit }) {
+    commit('clearAuthData')
+    localStorage.removeItem('token')
+    localStorage.removeItem('id')
+    localStorage.removeItem('roles')
+    localStorage.removeItem('type')
+    localStorage.removeItem('expirationDate')
+    router.replace('/login')
+  },
+  tryAutoLogin ({ commit, dispatch }) {
+    const token = localStorage.getItem('token')
+    const id = localStorage.getItem('id')
+    const roles = localStorage.getItem('roles')
+    const type = localStorage.getItem('type')
+    dispatch('setLogoutTimer', 3600)
+    if (!token) {
+      return
+    }
+    const expirationDate = localStorage.getItem('expirationDate')
+    const now = new Date().getTime() / 1000
+    if (now >= expirationDate) {
+        return
+    }
+    commit('authUser', {
+      id: id,
+      token: token,
+      userRoles: roles,
+      type: type,
+    })
+  },
 }
 
 export default {
-    state,
-    mutations,
-    actions,
-    getters,
+  state,
+  mutations,
+  actions,
+  getters,
 }

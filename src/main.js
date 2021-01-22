@@ -8,13 +8,14 @@ import './plugins/vee-validate'
 import vuetify from './plugins/vuetify'
 import i18n from './i18n'
 import axios from 'axios'
+import Vuelidate from 'vuelidate'
 
 axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
 axios.defaults.headers.get.accepts = 'application/json'
 axios.defaults.headers.common.authorization = 'Bearer ' + localStorage.getItem('token')
 
 Vue.config.productionTip = false
-
+Vue.use(Vuelidate)
 new Vue({
   router,
   store,

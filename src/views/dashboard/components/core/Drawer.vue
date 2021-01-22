@@ -6,7 +6,7 @@
     :expand-on-hover="expandOnHover"
     :right="$vuetify.rtl"
     :src="barImage"
-    mobile-break-point="960"
+    mobile-breakpoint="960"
     app
     width="260"
     v-bind="$attrs"
@@ -79,9 +79,9 @@
     <template v-slot:append>
       <base-item
         :item="{
-          title: $t('upgrade'),
-          icon: 'mdi-package-up',
-          to: '/upgrade',
+          title: $t('logout'),
+          icon: 'mdi-logout',
+          to: '/logout',
         }"
       />
     </template>
@@ -112,29 +112,14 @@
           to: '/',
         },
         {
+          title: 'tickets',
+          icon: 'mdi-clipboard-outline',
+          to: '/tickets',
+        },
+        {
           icon: 'mdi-account',
           title: 'user',
           to: '/pages/user',
-        },
-        {
-          title: 'rtables',
-          icon: 'mdi-clipboard-outline',
-          to: '/tables/regular-tables',
-        },
-        {
-          title: 'typography',
-          icon: 'mdi-format-font',
-          to: '/components/typography',
-        },
-        {
-          title: 'icons',
-          icon: 'mdi-chart-bubble',
-          to: '/components/icons',
-        },
-        {
-          title: 'google',
-          icon: 'mdi-map-marker',
-          to: '/maps/google-maps',
         },
         {
           title: 'notifications',
@@ -172,6 +157,9 @@
           children: item.children ? item.children.map(this.mapItem) : undefined,
           title: this.$t(item.title),
         }
+      },
+      onLogout () {
+        this.$store.dispatch('logout')
       },
     },
   }

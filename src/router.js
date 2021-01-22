@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import { store } from './store/store'
 
 import signup from '@/components/auth/signup'
-
 Vue.use(Router)
 
 export default new Router({
@@ -14,7 +13,6 @@ export default new Router({
       path: '/',
       component: () => import('@/views/dashboard/Index'),
       beforeEnter (to, from, next) {
-        console.log(store.getters.isAuthenticated)
         if (store.getters.isAuthenticated) {
           next()
         } else {
@@ -39,45 +37,28 @@ export default new Router({
           path: 'components/notifications',
           component: () => import('@/views/dashboard/component/Notifications'),
         },
-        {
-          name: 'Icons',
-          path: 'components/icons',
-          component: () => import('@/views/dashboard/component/Icons'),
-        },
-        {
-          name: 'Typography',
-          path: 'components/typography',
-          component: () => import('@/views/dashboard/component/Typography'),
-        },
         // Tables
         {
-          name: 'Regular Tables',
-          path: 'tables/regular-tables',
-          component: () => import('@/views/dashboard/tables/RegularTables'),
+          name: 'Tickets',
+          path: '/tickets',
+          component: () => import('@/views/tickets/Tickets'),
         },
-        // Maps
         {
-          name: 'Google Maps',
-          path: 'maps/google-maps',
-          component: () => import('@/views/dashboard/maps/GoogleMaps'),
-        },
-        // Upgrade
-        {
-          name: 'Upgrade',
-          path: 'upgrade',
-          component: () => import('@/views/dashboard/Upgrade'),
+          name: 'Ticket',
+          path: '/ticket/:id',
+          component: () => import('@/views/tickets/Ticket'),
         },
       ],
     },
     {
       name: 'Login',
       path: '/login',
-      component: () => import('@/components/auth/signin'),
+      component: () => import('@/components/auth/login'),
     },
     {
       name: 'Logout',
       path: '/logout',
-      component: () => import('@/components/auth/signin'),
+      component: () => import('@/components/auth/logout'),
     },
     {
       name: 'Signup',
