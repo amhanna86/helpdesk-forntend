@@ -21,14 +21,6 @@
           :key="comment.id"
           cols="12"
         >
-          <v-col cols="3">
-            <v-list-item-action>
-              <div
-                class="font-weight-light"
-                v-text="comment.user.id"
-              />
-            </v-list-item-action>
-          </v-col>
           <div
             class="font-weight-light"
             v-text="comment.comment"
@@ -40,7 +32,6 @@
 </template>
 <script>
   import axios from 'axios'
-
   export default {
     name: 'Ticket',
     data () {
@@ -48,9 +39,9 @@
         ticket: {},
       }
     },
-    created () {
+    async created () {
       const id = Number(this.$route.params.id)
-      axios.get('/ticket/' + id).then(
+      await axios.get('/ticket/' + id).then(
         res => {
           this.ticket = res.data
         },

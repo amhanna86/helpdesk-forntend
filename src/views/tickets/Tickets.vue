@@ -57,9 +57,9 @@
         ],
       }
     },
-    created () {
+    async created () {
       if (this.$store.getters.isAuthenticated) {
-        axios.get('/tickets/user').then(
+        await axios.get('/tickets/user').then(
           res => {
             this.tickets = res.data
           },
