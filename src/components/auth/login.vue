@@ -12,14 +12,25 @@
       >
         <v-col
           cols="12"
-          md="4"
+          md="3"
         >
-          <base-material-card>
+          <base-material-card
+            elevation="24"
+            outlined
+          >
             <template v-slot:heading>
-              <div class="display-2 font-weight-light">
+              <div class="display-2 font-weight-light text-center">
                 Login
               </div>
             </template>
+            <div class="subtitle-1 font-weight-thin text-center">
+              Or <router-link
+                to="/signup"
+                color="blue"
+              >
+                Register
+              </router-link>
+            </div>
             <v-form @submit.prevent="onSubmit">
               <v-container class="py-0">
                 <v-row>
@@ -36,6 +47,7 @@
                       required
                       clearable
                       :error-messages="emailErrors"
+                      prepend-icon="mdi-email"
                       @input="$v.email.$touch()"
                       @blur="$v.email.$touch()"
                     />
@@ -54,17 +66,19 @@
                       required
                       clearable
                       :error-messages="passwordErrors"
+                      prepend-icon="mdi-lock"
                       @input="$v.password.$touch()"
                       @blur="$v.password.$touch()"
                     />
                   </v-col>
                   <v-col
                     cols="12"
-                    class="text-right"
+                    class="text-center"
                   >
                     <v-btn
-                      color="success"
-                      class="mr-0"
+                      class="ma-0"
+                      outlined
+                      color="green"
                       type="submit"
                     >
                       Login

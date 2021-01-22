@@ -1,50 +1,262 @@
 <template>
-  <div id="signup">
-    <div class="signup-form">
-      <form @submit.prevent="onSubmit">
-        <div class="input">
-          <label for="email">Mail</label>
-          <input
-            id="email"
-            v-model="email"
-            type="email"
+  <v-app>
+    <v-container
+      id="login"
+      class="fill-height"
+      fluid
+      tag="section"
+    >
+      <v-row
+        justify="center"
+        align="center"
+      >
+        <v-col
+          cols="12"
+          md="8"
+        >
+          <base-material-card
+            elevation="24"
+            outlined
           >
-        </div>
-        <div class="input">
-          <label for="password">Password</label>
-          <input
-            id="password"
-            v-model="password"
-            type="password"
-          >
-        </div>
-        <div class="input">
-          <label for="confirm-password">Confirm Password</label>
-          <input
-            id="confirm-password"
-            v-model="confirmPassword"
-            type="password"
-          >
-        </div>
-        <div class="submit">
-          <button type="submit">
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</template>
+            <template v-slot:heading>
+              <div class="display-2 font-weight-light text-center">
+                Register
+              </div>
+            </template>
+            <div class="subtitle-1 font-weight-thin text-center">
+              Or <router-link
+                to="/login"
+              >
+                Login
+              </router-link>
+            </div>
+            <v-form @submit.prevent="onSubmit">
+              <v-container class="py-0">
+                <v-row>
+                  <v-col
+                    cols="12"
+                    md="12"
+                  >
+                    <v-text-field
+                      id="email"
+                      v-model="email"
+                      type="email"
+                      class="purple-input"
+                      label="Email Address"
+                      required
+                      clearable
+                      :error-messages="emailErrors"
+                      prepend-icon="mdi-email"
+                      @input="$v.email.$touch()"
+                      @blur="$v.email.$touch()"
+                    />
+                  </v-col>
 
+                  <v-col
+                    cols="12"
+                    md="6"
+                  >
+                    <v-text-field
+                      id="firstName"
+                      v-model="firstName"
+                      type="firstName"
+                      class="purple-input"
+                      label="First Name"
+                      required
+                      clearable
+                      :error-messages="firstNameErrors"
+                      prepend-icon="mdi-account"
+                      @input="$v.firstName.$touch()"
+                      @blur="$v.firstName.$touch()"
+                    />
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                    md="6"
+                  >
+                    <v-text-field
+                      id="lastName"
+                      v-model="lastName"
+                      type="lastName"
+                      class="purple-input"
+                      label="Last Name"
+                      required
+                      clearable
+                      :error-messages="lastNameErrors"
+                      prepend-icon="mdi-account-multiple"
+                      @input="$v.lastName.$touch()"
+                      @blur="$v.lastName.$touch()"
+                    />
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                    md="6"
+                  >
+                    <v-text-field
+                      id="password"
+                      v-model="password"
+                      type="password"
+                      label="Password"
+                      class="purple-input"
+                      required
+                      clearable
+                      :error-messages="passwordErrors"
+                      prepend-icon="mdi-lock"
+                      @input="$v.password.$touch()"
+                      @blur="$v.password.$touch()"
+                    />
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                    md="6"
+                  >
+                    <v-text-field
+                      id="confirmPassword"
+                      v-model="confirmPassword"
+                      type="password"
+                      label="Confirm Password"
+                      class="purple-input"
+                      required
+                      clearable
+                      :error-messages="confirmPasswordErrors"
+                      prepend-icon="mdi-lock"
+                      @input="$v.confirmPassword.$touch()"
+                      @blur="$v.confirmPassword.$touch()"
+                    />
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                    md="6"
+                  >
+                    <v-text-field
+                      id="company"
+                      v-model="company"
+                      type="company"
+                      label="Company"
+                      class="purple-input"
+                      required
+                      clearable
+                      :error-messages="companyErrors"
+                      prepend-icon="mdi-home-city"
+                      @input="$v.company.$touch()"
+                      @blur="$v.company.$touch()"
+                    />
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                    md="6"
+                  >
+                    <v-text-field
+                      id="phone"
+                      v-model="phone"
+                      type="phone"
+                      label="Phone"
+                      class="purple-input"
+                      required
+                      clearable
+                      :error-messages="phoneErrors"
+                      prepend-icon="mdi-phone"
+                      @input="$v.phone.$touch()"
+                      @blur="$v.phone.$touch()"
+                    />
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                    class="text-center"
+                  >
+                    <v-btn
+                      class="ma-0"
+                      outlined
+                      color="green"
+                      type="submit"
+                    >
+                      Register
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-form>
+          </base-material-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-app>
+</template>
 <script>
   import router from '../../router'
+  import { email, required, sameAs, numeric, alphaNum } from 'vuelidate/lib/validators'
   export default {
+    validations: {
+      email: { required, email },
+      password: { required },
+      confirmPassword: { required, sameAsPassword: sameAs('password') },
+      firstName: { required },
+      lastName: { required },
+      company: { alphaNum },
+      phone: { numeric },
+    },
     data () {
       return {
         email: '',
         password: '',
         confirmPassword: '',
+        firstName: '',
+        lastName: '',
+        company: '',
+        phone: '',
       }
+    },
+    computed: {
+      passwordErrors () {
+        const errors = []
+        if (!this.$v.password.$dirty) return errors
+        !this.$v.password.required && errors.push('Password is required.')
+        return errors
+      },
+      confirmPasswordErrors () {
+        const errors = []
+        if (!this.$v.confirmPassword.$dirty) return errors
+        !this.$v.confirmPassword.required && errors.push('Confirm Password is required.')
+        !this.$v.confirmPassword.sameAsPassword && errors.push('There is a mismatch.')
+        return errors
+      },
+      emailErrors () {
+        const errors = []
+        if (!this.$v.email.$dirty) return errors
+        !this.$v.email.email && errors.push('Must be valid e-mail')
+        !this.$v.email.required && errors.push('E-mail is required')
+        return errors
+      },
+      lastNameErrors () {
+        const errors = []
+        if (!this.$v.lastName.$dirty) return errors
+        !this.$v.lastName.required && errors.push('Last Name is required')
+        return errors
+      },
+      firstNameErrors () {
+        const errors = []
+        if (!this.$v.firstName.$dirty) return errors
+        !this.$v.firstName.required && errors.push('First Name is required')
+        return errors
+      },
+      companyErrors () {
+        const errors = []
+        if (!this.$v.company.$dirty) return errors
+        !this.$v.company.alphaNum && errors.push('Company Name should have letters')
+        return errors
+      },
+      phoneErrors () {
+        const errors = []
+        if (!this.$v.phone.$dirty) return errors
+        !this.$v.phone.numeric && errors.push('Telephone should have numbers')
+        return errors
+      },
     },
     created () {
       if (this.$store.getters.isAuthenticated) {
@@ -53,88 +265,26 @@
     },
     methods: {
       onSubmit () {
+        this.$v.$touch()
         const formData = {
           email: this.email,
           password: this.password,
           confirmPassword: this.confirmPassword,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          company: this.company,
+          phone: this.phone,
         }
-        this.$store.dispatch('signup', formData)
+        if (this.$v.$invalid) {
+          this.submitStatus = 'ERROR'
+        } else {
+          this.$store.dispatch('signup', formData)
+        }
       },
     },
   }
 </script>
 
 <style scoped>
-.signup-form {
-  width: 400px;
-  margin: 30px auto;
-  border: 1px solid #eee;
-  padding: 20px;
-  box-shadow: 0 2px 3px #ccc;
-}
-.input {
-  margin: 10px auto;
-}
-.input label {
-  display: block;
-  color: #4e4e4e;
-  margin-bottom: 6px;
-}
-.input.inline label {
-  display: inline;
-}
-.input input {
-  font: inherit;
-  width: 100%;
-  padding: 6px 12px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-}
-.input.inline input {
-  width: auto;
-}
-.input input:focus {
-  outline: none;
-  border: 1px solid #521751;
-  background-color: #eee;
-}
-.input select {
-  border: 1px solid #ccc;
-  font: inherit;
-}
-.hobbies button {
-  border: 1px solid #521751;
-  background: #521751;
-  color: white;
-  padding: 6px;
-  font: inherit;
-  cursor: pointer;
-}
-.hobbies button:hover,
-.hobbies button:active {
-  background-color: #8d4288;
-}
-.hobbies input {
-  width: 90%;
-}
-.submit button {
-  border: 1px solid #521751;
-  color: #521751;
-  padding: 10px 20px;
-  font: inherit;
-  cursor: pointer;
-}
-.submit button:hover,
-.submit button:active {
-  background-color: #521751;
-  color: white;
-}
-.submit button[disabled],
-.submit button[disabled]:hover,
-.submit button[disabled]:active {
-  border: 1px solid #ccc;
-  background-color: transparent;
-  color: #ccc;
-  cursor: not-allowed;
-}
+
 </style>
