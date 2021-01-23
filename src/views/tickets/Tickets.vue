@@ -5,10 +5,29 @@
     class="px-5 py-3"
   >
     <v-data-table
+      class="row-pointer"
       :headers="headers"
       :items="tickets"
       @click:row="handleClick"
-    />
+    >
+      <template v-slot:item.createdAt="{ item }">
+        {{ item.createdAt | formatDate }}
+      </template>
+      <template v-slot:item.customer="{ item }">
+        {{ item.customer.fullUsername }}
+      </template>
+      <template v-slot:item.updatedAt="{ item }">
+        {{ item.updatedAt | formatDate }}
+      </template>
+      <template v-slot:item.status="{ item }">
+        <v-chip
+          :color="$options.filters.colors(item.status)"
+          dark
+        >
+          {{ item.status | status }}
+        </v-chip>
+      </template>
+    </v-data-table>
   </base-material-card>
 </template>
 <script>
@@ -21,35 +40,35 @@
         tickets: [],
         headers: [
           {
-            sortable: false,
+            sortable: true,
             text: 'ID',
             value: 'id',
           },
           {
-            sortable: false,
+            sortable: true,
             text: 'Title',
             value: 'title',
           },
           {
-            sortable: false,
+            sortable: true,
             text: 'Status',
             value: 'status',
             align: 'right',
           },
           {
-            sortable: false,
+            sortable: true,
             text: 'CreatedAt',
             value: 'createdAt',
             align: 'right',
           },
           {
-            sortable: false,
+            sortable: true,
             text: 'UpdatedAt',
             value: 'updatedAt',
             align: 'right',
           },
           {
-            sortable: false,
+            sortable: true,
             text: 'Customer',
             value: 'customer',
             align: 'right',
@@ -74,8 +93,8 @@
   }
 </script>
 
-<style scoped>
-tr:hover{
+<style lang="css" scoped>
+.row-pointer >>> tbody tr :hover {
   cursor: pointer;
 }
 </style>
