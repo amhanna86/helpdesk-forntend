@@ -41,12 +41,17 @@ export default new Router({
         {
           name: 'Tickets',
           path: '/tickets',
-          component: () => import('@/views/tickets/Tickets'),
+          component: () => import('@/views/tickets'),
+        },
+        {
+          name: 'New Ticket',
+          path: '/ticket/new',
+          component: () => import('@/views/tickets/create'),
         },
         {
           name: 'Ticket',
           path: '/ticket/:id',
-          component: () => import('@/views/tickets/Ticket'),
+          component: () => import('@/views/tickets/show'),
         },
       ],
     },

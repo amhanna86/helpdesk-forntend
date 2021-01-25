@@ -12,6 +12,10 @@ import Vuelidate from 'vuelidate'
 import moment from 'moment'
 import Status from './filters/status.js'
 import Colors from './filters/colors.js'
+import filters from './filters/filters.js'
+for (const name in filters) {
+  Vue.filter(name, filters[name])
+}
 
 Vue.filter('formatDate', function (value) {
   if (value) {

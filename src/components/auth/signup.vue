@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container
-      id="login"
+      id="signup"
       class="fill-height"
       fluid
       tag="section"

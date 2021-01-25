@@ -4,6 +4,22 @@
     title="Tickets"
     class="px-5 py-3"
   >
+    <v-btn
+      v-if="this.$store.getters.isCustomer"
+      class="mx-2"
+      absolute
+      right
+      top
+      fab
+      dark
+      small
+      color="blue"
+      to="/ticket/new"
+    >
+      <v-icon dark>
+        mdi-plus
+      </v-icon>
+    </v-btn>
     <v-data-table
       class="row-pointer"
       :headers="headers"
