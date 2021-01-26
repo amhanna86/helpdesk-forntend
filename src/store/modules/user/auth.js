@@ -8,6 +8,11 @@ const state = {
   roles: [],
   type: null,
   expirationDate: null,
+  snackbar: {
+    color: '',
+    snackbar: false,
+    message: '',
+  },
 }
 
 const getters = {
@@ -40,15 +45,28 @@ const mutations = {
     state.type = null
     state.expirationDate = null
   },
+  notifications (state, snackbar) {
+    state.snackbar = {
+      color: snackbar.color,
+      snackbar: snackbar.snackbar,
+      message: snackbar.message,
+    }
+  },
 }
 
 const actions = {
-  setLogoutTimer ({ commit, dispatch }, expirationTime) {
+  setLogoutTimer ({
+                    commit,
+                    dispatch,
+                  }, expirationTime) {
     setTimeout(() => {
       dispatch('logout')
     }, expirationTime * 1000)
   },
-  signup ({ commit, dispatch }, formData) {
+  signup ({
+            commit,
+            dispatch,
+          }, formData) {
     axiosNoAuth.post('/register', formData)
       .then(response => {
         dispatch('setLogoutTimer', 3600)
@@ -56,7 +74,10 @@ const actions = {
       })
       .catch(error => console.log(error))
   },
-  login ({ commit, dispatch }, authData) {
+  login ({
+           commit,
+           dispatch,
+         }, authData) {
     axios.post('/login_check', {
       username: authData.email,
       password: authData.password,
@@ -67,6 +88,13 @@ const actions = {
           token: response.data.token,
           roles: response.data.user.roles,
           type: response.data.user.type,
+        })
+        commit('notifications', {
+        snackbar: {
+          color: 'green',
+            snackbar: true,
+          message: 'You logged in successfully ',
+        },
         })
         localStorage.setItem('id', response.data.user.id)
         localStorage.setItem('token', response.data.token)
@@ -87,7 +115,10 @@ const actions = {
     localStorage.removeItem('expirationDate')
     router.replace('/login')
   },
-  tryAutoLogin ({ commit, dispatch }) {
+  tryAutoLogin ({
+                  commit,
+                  dispatch,
+                }) {
     const token = localStorage.getItem('token')
     const id = localStorage.getItem('id')
     const roles = localStorage.getItem('roles')
@@ -99,7 +130,7 @@ const actions = {
     const expirationDate = localStorage.getItem('expirationDate')
     const now = new Date().getTime() / 1000
     if (now >= expirationDate) {
-        return
+      return
     }
     commit('authUser', {
       id: id,

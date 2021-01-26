@@ -1,42 +1,39 @@
 <template>
   <v-dialog
-    v-model="statusDialog"
+    v-model="agentDialog"
     persistent
     max-width="600px"
   >
     <template v-slot:activator="{ on, attrs }">
-      <v-chip
-        :color="$options.filters.colors(ticket.status)"
+      <v-icon
+        x-small
         v-bind="attrs"
-        dark
         v-on="on"
+        @click="getAgents"
       >
-        {{ ticket.status | status }}
-      </v-chip>
+        mdi-pencil
+      </v-icon>
     </template>
     <v-card>
       <v-card-title>
-        <span class="headline">Change Status </span>
+        <span class="headline">Change Assignee </span>
       </v-card-title>
       <v-form @submit.prevent="onSubmit">
         <v-card-text>
-          <v-container class="py-0">
+          <v-container>
             <v-row>
               <v-col
                 cols="12"
-                md="12"
+                sm="12"
               >
                 <v-autocomplete
-                  v-model="defaultSelectedStatus"
-                  :items="[
-                    {key:'New',value:0},
-                    {key:'In Progress',value:1},
-                    {key:'Done',value:2},
-                    {key:'Archived',value:3}]"
-                  label="Status"
+                  v-model="defaultSelectedAgent"
+                  :items="agents"
+                  label="Agents"
                   dense
                   filled
-                  item-text="key"
+                  item-text="fullUsername"
+                  item-value="id"
                 />
               </v-col>
             </v-row>
@@ -47,7 +44,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="statusDialog = false"
+            @click="agentDialog = false"
           >
             Close
           </v-btn>
@@ -55,7 +52,7 @@
             color="blue darken-1"
             text
             type="submit"
-            @click="onSubmit; statusDialog = false"
+            @click="onSubmit; agentDialog = false"
           >
             Save
           </v-btn>
@@ -69,7 +66,7 @@
   import axios from 'axios'
 
   export default {
-    name: 'EditStatus',
+    name: 'EditAgent',
     props: {
       ticket: {
         type: Object,
@@ -78,7 +75,8 @@
     },
     data () {
       return {
-        statusDialog: false,
+        agentDialog: false,
+        agents: [],
         defaultSelectedStatus: this.ticket.status,
         defaultSelectedAgent: this.ticket.agent,
       }
@@ -87,11 +85,16 @@
       onSubmit () {
         const formData = {
           status: this.defaultSelectedStatus,
-          agent: this.defaultSelectedAgent.id,
+          agent: this.defaultSelectedAgent,
         }
-        axios.put('/ticket/edit/' + this.ticket.id, formData).then(
-          (res) => {
-            this.ticket.status = res.data.status
+        axios.put('/ticket/edit/' + this.ticket.id, formData).then((res) => {
+          this.ticket.agent = res.data.agent
+        })
+      },
+      getAgents () {
+        axios.get('/agents').then(
+          res => {
+            this.agents = res.data
           },
         )
       },

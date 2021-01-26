@@ -24,7 +24,8 @@
               </div>
             </template>
             <div class="subtitle-1 font-weight-thin text-center">
-              Or <router-link
+              Or
+              <router-link
                 to="/signup"
                 color="blue"
               >
@@ -99,7 +100,10 @@
 
   export default {
     validations: {
-      email: { required, email },
+      email: {
+        required,
+        email,
+      },
       password: { required },
     },
     data () {
@@ -138,7 +142,10 @@
         if (this.$v.$invalid) {
           this.submitStatus = 'ERROR'
         } else {
-          this.$store.dispatch('login', { email: formData.email, password: formData.password })
+          this.$store.dispatch('login', {
+            email: formData.email,
+            password: formData.password,
+          })
         }
       },
     },
