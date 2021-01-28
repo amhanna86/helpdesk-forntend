@@ -77,14 +77,13 @@
       return {
         agentDialog: false,
         agents: [],
-        defaultSelectedStatus: this.ticket.status,
         defaultSelectedAgent: this.ticket.agent,
       }
     },
     methods: {
       onSubmit () {
         const formData = {
-          status: this.defaultSelectedStatus,
+          status: this.ticket.status,
           agent: this.defaultSelectedAgent,
         }
         axios.put('/ticket/edit/' + this.ticket.id, formData).then((res) => {

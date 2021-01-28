@@ -8,11 +8,6 @@ const state = {
   roles: [],
   type: null,
   expirationDate: null,
-  snackbar: {
-    color: '',
-    snackbar: false,
-    message: '',
-  },
 }
 
 const getters = {
@@ -44,13 +39,6 @@ const mutations = {
     state.roles = null
     state.type = null
     state.expirationDate = null
-  },
-  notifications (state, snackbar) {
-    state.snackbar = {
-      color: snackbar.color,
-      snackbar: snackbar.snackbar,
-      message: snackbar.message,
-    }
   },
 }
 
@@ -88,13 +76,6 @@ const actions = {
           token: response.data.token,
           roles: response.data.user.roles,
           type: response.data.user.type,
-        })
-        commit('notifications', {
-        snackbar: {
-          color: 'green',
-            snackbar: true,
-          message: 'You logged in successfully ',
-        },
         })
         localStorage.setItem('id', response.data.user.id)
         localStorage.setItem('token', response.data.token)

@@ -10,9 +10,11 @@ import i18n from './i18n'
 import axios from 'axios'
 import Vuelidate from 'vuelidate'
 import moment from 'moment'
-import Status from './filters/status.js'
-import Colors from './filters/colors.js'
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
+
 import filters from './filters/filters.js'
+
 for (const name in filters) {
   Vue.filter(name, filters[name])
 }
@@ -30,8 +32,14 @@ axios.defaults.headers.common.authorization = 'Bearer ' + localStorage.getItem('
 Vue.config.productionTip = false
 Vue.use(Vuelidate)
 
-Vue.filter('status', Status)
-Vue.filter('colors', Colors)
+const options = {
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+}
+Vue.use(VueSweetalert2, options)
 
 new Vue({
   router,

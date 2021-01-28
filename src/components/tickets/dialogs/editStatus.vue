@@ -27,7 +27,7 @@
                 md="12"
               >
                 <v-autocomplete
-                  v-model="defaultSelectedStatus"
+                  v-model="selectedStatus"
                   :items="[
                     {key:'New',value:0},
                     {key:'In Progress',value:1},
@@ -79,15 +79,14 @@
     data () {
       return {
         statusDialog: false,
-        defaultSelectedStatus: this.ticket.status,
-        defaultSelectedAgent: this.ticket.agent,
+        selectedStatus: this.ticket.status,
       }
     },
     methods: {
       onSubmit () {
         const formData = {
-          status: this.defaultSelectedStatus,
-          agent: this.defaultSelectedAgent.id,
+          status: this.selectedStatus,
+          agent: this.ticket.agent.id,
         }
         axios.put('/ticket/edit/' + this.ticket.id, formData).then(
           (res) => {
