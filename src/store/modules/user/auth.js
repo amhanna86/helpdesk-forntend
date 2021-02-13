@@ -71,17 +71,17 @@ const actions = {
       password: authData.password,
     })
       .then(response => {
+        localStorage.setItem('id', response.data.user.id)
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('roles', JSON.stringify(response.data.user.roles))
+        localStorage.setItem('type', response.data.user.type)
+        localStorage.setItem('expirationDate', response.data.user.expirationDate)
         commit('authUser', {
           id: response.data.user.id,
           token: response.data.token,
           roles: response.data.user.roles,
           type: response.data.user.type,
         })
-        localStorage.setItem('id', response.data.user.id)
-        localStorage.setItem('token', response.data.token)
-        localStorage.setItem('roles', JSON.stringify(response.data.user.roles))
-        localStorage.setItem('type', response.data.user.type)
-        localStorage.setItem('expirationDate', response.data.user.expirationDate)
         dispatch('setLogoutTimer', 3600)
         router.push('/')
       })

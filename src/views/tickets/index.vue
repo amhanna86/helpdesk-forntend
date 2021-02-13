@@ -93,13 +93,8 @@
       }
     },
     async created () {
-      if (this.$store.getters.isAuthenticated) {
-        await axios.get('/tickets/user').then(
-          res => {
-            this.tickets = res.data
-          },
-        )
-      }
+      const response = await axios.get('/tickets/user')
+      this.tickets = response.data
     },
     methods: {
       handleClick (row) {

@@ -69,7 +69,7 @@
 
 <script>
   import { required } from 'vuelidate/lib/validators'
-  import axios from 'axios'
+  import ticketService from '@/services/ticketService'
 
   export default {
     validations: {
@@ -105,8 +105,12 @@
         }
         if (this.$v.$invalid) {
           this.submitStatus = 'ERROR'
+          this.$swal({
+            icon: 'error',
+            title: 'You left some mandatory files Empty',
+          })
         } else {
-          axios.post('/ticket/new', formData)
+          ticketService.ticketSubmit(formData)
         }
       },
     },
