@@ -116,7 +116,7 @@
       passwordErrors () {
         const errors = []
         if (!this.$v.password.$dirty) return errors
-        !this.$v.password.required && errors.push('Name is required.')
+        !this.$v.password.required && errors.push('Password is required.')
         return errors
       },
       emailErrors () {

@@ -33,9 +33,9 @@
   </v-row>
 </template>
 <script>
-  import axios from 'axios'
   import comments from '../../components/tickets/comments'
   import info from '../../components/tickets/info'
+  import ticketService from '@/services/ticketService'
 
   export default {
     name: 'Ticket',
@@ -51,7 +51,7 @@
     },
     created () {
       const id = Number(this.$route.params.id)
-      axios.get('/ticket/' + id).then(
+      ticketService.getTicket(id).then(
         res => {
           this.ticket = res.data
           this.comments = res.data.ticketComments

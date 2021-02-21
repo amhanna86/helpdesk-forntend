@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export default {
   userLetters: (user) => {
     return user.firstName.charAt(0).toUpperCase() + user.lastName.charAt(0).toUpperCase() // <-- The return value as Per logic
@@ -26,6 +28,12 @@ export default {
         return 'blue'
       case 3:
         return 'gray'
+    }
+  },
+
+  formatDate: (value) => {
+    if (value) {
+      return moment(String(value)).format('DD.MM.YYYY HH:mm')
     }
   },
 }

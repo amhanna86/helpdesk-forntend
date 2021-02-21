@@ -63,7 +63,8 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import ticketService from '@/services/ticketService'
+  import userService from '@/services/userService'
 
   export default {
     name: 'EditAgent',
@@ -86,12 +87,12 @@
           status: this.ticket.status,
           agent: this.defaultSelectedAgent,
         }
-        axios.put('/ticket/edit/' + this.ticket.id, formData).then((res) => {
+        ticketService.putAgentStatus(this.ticket.id, formData).then((res) => {
           this.ticket.agent = res.data.agent
         })
       },
       getAgents () {
-        axios.get('/agents').then(
+        userService.getAgents().then(
           res => {
             this.agents = res.data
           },

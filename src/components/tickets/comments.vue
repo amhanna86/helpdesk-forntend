@@ -42,9 +42,9 @@
             cols="1"
             class="text-right"
           >
-            <v-icon class="mx-1">
-              mdi-pencil
-            </v-icon>
+            <template v-if="checkUser(comment)">
+              <edit-comment :current-comment="comment" />
+            </template>
           </v-col>
         </v-row>
       </template>
@@ -91,10 +91,14 @@
 </template>
 <script>
   import { required } from 'vuelidate/lib/validators'
-  import axios from 'axios'
+  import ticketService from '@/services/ticketService'
+  import editComment from '@/components/tickets/dialogs/editComment'
 
   export default {
     name: 'Comments',
+    components: {
+      editComment: editComment,
+    },
     props: {
       ticket: {
         type: Object,
@@ -133,17 +137,21 @@
         } else {
           // eslint-disable-next-line no-unused-expressions
           this.loading = true
-          axios.post('/ticket/comment/' + this.ticket.id + '/new', formData).then(res => {
+          ticketService.submitComment(this.ticket.id, formData).then(res => {
             this.$v.$reset()
             this.newComment = ''
             this.comments.push(res.data)
+            // eslint-disable-next-line handle-callback-err
           }).catch((error) => {
             this.error = true
-            console.log(error)
           }).finally(() => {
             this.loading = false
           })
         }
+      },
+      checkUser (comment) {
+        const currentUserId = this.$store.getters.getUserId
+        return parseInt(currentUserId) === parseInt(comment.user.id)
       },
     },
   }

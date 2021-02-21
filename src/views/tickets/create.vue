@@ -53,12 +53,20 @@
               </v-row>
             </v-container>
             <v-btn
-              class="ma-0"
+              class="mx-2"
               outlined
               color="green"
               type="submit"
             >
               Submit
+            </v-btn>
+            <v-btn
+              class="mx-2"
+              outlined
+              color="gray"
+              to="/tickets"
+            >
+              Cancel
             </v-btn>
           </v-form>
         </base-material-card>
@@ -110,7 +118,7 @@
             title: 'You left some mandatory files Empty',
           })
         } else {
-          ticketService.ticketSubmit(formData)
+          ticketService.submitTicket(formData)
         }
       },
     },

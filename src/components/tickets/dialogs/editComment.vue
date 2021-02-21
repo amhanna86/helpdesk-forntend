@@ -1,42 +1,38 @@
 <template>
   <v-dialog
-    v-model="statusDialog"
+    v-model="commentDialog"
     persistent
     max-width="600px"
   >
     <template v-slot:activator="{ on, attrs }">
-      <v-chip
-        :color="$options.filters.colors(ticket.status)"
+      <v-icon
+        x-small
         v-bind="attrs"
-        dark
         v-on="on"
       >
-        {{ ticket.status | status }}
-      </v-chip>
+        mdi-pencil
+      </v-icon>
     </template>
     <v-card>
       <v-card-title>
-        <span class="headline">Change Status </span>
+        <span class="headline">Edit Comment</span>
       </v-card-title>
       <v-form @submit.prevent="onSubmit">
         <v-card-text>
-          <v-container class="py-0">
+          <v-container>
             <v-row>
               <v-col
                 cols="12"
-                md="12"
+                sm="12"
               >
-                <v-autocomplete
-                  v-model="selectedStatus"
-                  :items="[
-                    {key:'New',value:0},
-                    {key:'In Progress',value:1},
-                    {key:'Done',value:2},
-                    {key:'Archived',value:3}]"
-                  label="Status"
-                  dense
-                  filled
-                  item-text="key"
+                <v-textarea
+                  id="newComment"
+                  v-model="editedComment"
+                  type="comment"
+                  class="purple-input"
+                  label="Comment"
+                  required
+                  clearable
                 />
               </v-col>
             </v-row>
@@ -47,7 +43,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="statusDialog = false"
+            @click="commentDialog = false"
           >
             Close
           </v-btn>
@@ -55,7 +51,7 @@
             color="blue darken-1"
             text
             type="submit"
-            @click="onSubmit; statusDialog = false"
+            @click="onSubmit; commentDialog = false"
           >
             Save
           </v-btn>
@@ -67,29 +63,29 @@
 
 <script>
   import ticketService from '@/services/ticketService'
+
   export default {
-    name: 'EditStatus',
+    name: 'EditComment',
     props: {
-      ticket: {
+      currentComment: {
         type: Object,
         required: true,
       },
     },
     data () {
       return {
-        statusDialog: false,
-        selectedStatus: this.ticket.status,
+        commentDialog: false,
+        editedComment: this.currentComment.comment,
       }
     },
     methods: {
       onSubmit () {
         const formData = {
-          status: this.selectedStatus,
-          agent: this.ticket.agent.id,
+          comment: this.editedComment,
         }
-        ticketService.putTicketStatus(this.ticket.id, formData).then(
+        ticketService.putComment(this.currentComment.id, formData).then(
           (res) => {
-            this.ticket.status = res.data.status
+            this.currentComment.comment = res.data.comment
           },
         )
       },

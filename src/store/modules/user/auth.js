@@ -1,6 +1,5 @@
 import axiosNoAuth from '../../../axiosNoAuth'
 import router from '../../../router'
-import axios from 'axios'
 
 const state = {
   token: null,
@@ -22,6 +21,9 @@ const getters = {
   },
   isAgent (state) {
     return state.type === 'agent'
+  },
+  getUserId (state) {
+    return state.id
   },
 }
 
@@ -66,7 +68,7 @@ const actions = {
            commit,
            dispatch,
          }, authData) {
-    axios.post('/login_check', {
+    axiosNoAuth.post('/login_check', {
       username: authData.email,
       password: authData.password,
     })
