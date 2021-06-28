@@ -6,7 +6,7 @@
     >
       <base-material-card
         color="warning"
-        class="px-5 py-3"
+        class="px-5 py-3 ml-5"
       >
         <template v-slot:heading>
           <div class="display-2 font-weight-light">

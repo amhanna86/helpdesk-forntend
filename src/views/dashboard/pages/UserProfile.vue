@@ -20,36 +20,25 @@
             </div>
           </template>
 
-          <v-form>
+          <v-form @submit.prevent="onSubmit">
             <v-container class="py-0">
               <v-row>
                 <v-col
                   cols="12"
-                  md="4"
+                  md="12"
                 >
                   <v-text-field
-                    label="Company (disabled)"
-                    disabled
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="4"
-                >
-                  <v-text-field
+                    id="email"
+                    v-model="email"
+                    type="email"
                     class="purple-input"
-                    label="User Name"
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="4"
-                >
-                  <v-text-field
                     label="Email Address"
-                    class="purple-input"
+                    required
+                    clearable
+                    :error-messages="emailErrors"
+                    prepend-icon="mdi-email"
+                    @input="$v.email.$touch()"
+                    @blur="$v.email.$touch()"
                   />
                 </v-col>
 
@@ -58,8 +47,17 @@
                   md="6"
                 >
                   <v-text-field
+                    id="firstName"
+                    v-model="firstName"
+                    type="firstName"
+                    class="purple-input"
                     label="First Name"
-                    class="purple-input"
+                    required
+                    clearable
+                    :error-messages="firstNameErrors"
+                    prepend-icon="mdi-account"
+                    @input="$v.firstName.$touch()"
+                    @blur="$v.firstName.$touch()"
                   />
                 </v-col>
 
@@ -68,66 +66,69 @@
                   md="6"
                 >
                   <v-text-field
+                    id="lastName"
+                    v-model="lastName"
+                    type="lastName"
+                    class="purple-input"
                     label="Last Name"
-                    class="purple-input"
-                  />
-                </v-col>
-
-                <v-col cols="12">
-                  <v-text-field
-                    label="Adress"
-                    class="purple-input"
+                    required
+                    clearable
+                    :error-messages="lastNameErrors"
+                    prepend-icon="mdi-account-multiple"
+                    @input="$v.lastName.$touch()"
+                    @blur="$v.lastName.$touch()"
                   />
                 </v-col>
 
                 <v-col
                   cols="12"
-                  md="4"
+                  md="6"
                 >
                   <v-text-field
-                    label="City"
+                    id="company"
+                    v-model="company"
+                    type="company"
+                    label="Company"
                     class="purple-input"
+                    required
+                    clearable
+                    :error-messages="companyErrors"
+                    prepend-icon="mdi-home-city"
+                    @input="$v.company.$touch()"
+                    @blur="$v.company.$touch()"
                   />
                 </v-col>
 
                 <v-col
                   cols="12"
-                  md="4"
+                  md="6"
                 >
                   <v-text-field
-                    label="Country"
+                    id="phone"
+                    v-model="phone"
+                    type="phone"
+                    label="Phone"
                     class="purple-input"
+                    required
+                    clearable
+                    :error-messages="phoneErrors"
+                    prepend-icon="mdi-phone"
+                    @input="$v.phone.$touch()"
+                    @blur="$v.phone.$touch()"
                   />
                 </v-col>
 
                 <v-col
                   cols="12"
-                  md="4"
-                >
-                  <v-text-field
-                    class="purple-input"
-                    label="Postal Code"
-                    type="number"
-                  />
-                </v-col>
-
-                <v-col cols="12">
-                  <v-textarea
-                    class="purple-input"
-                    label="About Me"
-                    value="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  class="text-right"
+                  class="text-center"
                 >
                   <v-btn
-                    color="success"
-                    class="mr-0"
+                    class="ma-0"
+                    outlined
+                    color="green"
+                    type="submit"
                   >
-                    Update Profile
+                    Update
                   </v-btn>
                 </v-col>
               </v-row>
@@ -172,7 +173,97 @@
 </template>
 
 <script>
+  import { email, required, numeric, alphaNum } from 'vuelidate/lib/validators'
+  import userService from '../../../services/userService'
   export default {
-    //
+    validations: {
+      email: { required, email },
+      firstName: { required },
+      lastName: { required },
+      company: { alphaNum },
+      phone: { numeric },
+    },
+    data () {
+      return {
+        id: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        firstName: '',
+        lastName: '',
+        company: '',
+        phone: '',
+      }
+    },
+
+    computed: {
+      emailErrors () {
+        const errors = []
+        if (!this.$v.email.$dirty) return errors
+        !this.$v.email.email && errors.push('Must be valid e-mail')
+        !this.$v.email.required && errors.push('E-mail is required')
+        return errors
+      },
+      lastNameErrors () {
+        const errors = []
+        if (!this.$v.lastName.$dirty) return errors
+        !this.$v.lastName.required && errors.push('Last Name is required')
+        return errors
+      },
+      firstNameErrors () {
+        const errors = []
+        if (!this.$v.firstName.$dirty) return errors
+        !this.$v.firstName.required && errors.push('First Name is required')
+        return errors
+      },
+      companyErrors () {
+        const errors = []
+        if (!this.$v.company.$dirty) return errors
+        !this.$v.company.alphaNum && errors.push('Company Name should have letters')
+        return errors
+      },
+      phoneErrors () {
+        const errors = []
+        if (!this.$v.phone.$dirty) return errors
+        !this.$v.phone.numeric && errors.push('Telephone should have numbers')
+        return errors
+      },
+    },
+    async created () {
+      const response = await userService.getUserProfile()
+      this.id = response.data.id
+      this.email = response.data.email
+      this.firstName = response.data.firstName
+      this.lastName = response.data.lastName
+      this.company = response.data.company
+      this.phone = response.data.phone
+    },
+    methods: {
+      onSubmit () {
+        this.$v.$touch()
+        const formData = {
+          email: this.email,
+          password: this.password,
+          confirmPassword: this.confirmPassword,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          company: this.company,
+          phone: this.phone,
+        }
+        if (this.$v.$invalid) {
+          this.submitStatus = 'ERROR'
+        } else {
+          userService.putUserProfile(this.id, formData).then(
+            (res) => {
+              this.email = res.data.email
+              this.firstName = res.data.firstName
+              this.lastName = res.data.lastName
+              this.company = res.data.company
+              this.phone = res.data.phone
+            },
+          )
+        }
+      },
+    },
   }
 </script>

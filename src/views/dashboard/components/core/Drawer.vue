@@ -117,8 +117,8 @@
           to: '/tickets',
         },
         {
-          icon: 'mdi-account',
           title: 'user',
+          icon: 'mdi-account',
           to: '/pages/user',
         },
       ],
