@@ -81,7 +81,7 @@ const actions = {
         commit('authUser', {
           id: response.data.user.id,
           token: response.data.token,
-          roles: response.data.user.roles,
+          roles: JSON.stringify(response.data.user.roles),
           type: response.data.user.type,
         })
         dispatch('setLogoutTimer', 3600)
@@ -118,7 +118,7 @@ const actions = {
     commit('authUser', {
       id: id,
       token: token,
-      userRoles: roles,
+      roles: roles,
       type: type,
     })
   },

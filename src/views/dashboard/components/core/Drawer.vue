@@ -51,28 +51,15 @@
       expand
       nav
     >
-      <!-- Style cascading bug  -->
-      <!-- https://github.com/vuetifyjs/vuetify/pull/8574 -->
       <div />
 
       <template v-for="(item, i) in computedItems">
-        <base-item-group
-          v-if="item.children"
-          :key="`group-${i}`"
-          :item="item"
-        >
-          <!--  -->
-        </base-item-group>
-
         <base-item
-          v-else
+          v-if="checkVisibility(item)"
           :key="`item-${i}`"
           :item="item"
         />
       </template>
-
-      <!-- Style cascading bug  -->
-      <!-- https://github.com/vuetifyjs/vuetify/pull/8574 -->
       <div />
     </v-list>
 
@@ -110,16 +97,25 @@
           icon: 'mdi-view-dashboard',
           title: 'dashboard',
           to: '/',
+          onlyAdmin: false,
         },
         {
           title: 'tickets',
           icon: 'mdi-clipboard-outline',
           to: '/tickets',
+          onlyAdmin: false,
         },
         {
           title: 'user',
           icon: 'mdi-account',
-          to: '/pages/user',
+          to: '/profile',
+          onlyAdmin: false,
+        },
+        {
+          title: 'users',
+          icon: 'mdi-account-multiple',
+          to: '/users',
+          onlyAdmin: true,
         },
       ],
     }),
@@ -155,6 +151,13 @@
       },
       onLogout () {
         this.$store.dispatch('logout')
+      },
+      checkVisibility (item) {
+        if (item.onlyAdmin) {
+          return this.$store.getters.isAdmin
+        } else {
+          return !item.onlyAdmin
+        }
       },
     },
   }

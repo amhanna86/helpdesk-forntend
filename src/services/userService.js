@@ -5,6 +5,9 @@ export default {
  getAgents: () => {
    return authAxios.get('/agents')
   },
+  getUsers: () => {
+    return authAxios.get('/users')
+  },
   getUserProfile: () => {
     return authAxios.get('/user')
   },

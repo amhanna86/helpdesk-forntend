@@ -164,7 +164,6 @@
     },
     async created () {
       const response = await ticketService.getTickets()
-      console.log(response)
       this.tickets = response.data
     },
     methods: {
